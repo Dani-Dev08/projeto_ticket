@@ -1,0 +1,38 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+ENV/
+
+# Saídas de build do PyInstaller
+build/
+dist/
+*.manifest
+
+# Artefatos gerados em execução
+*.xlsx
+!README_assets/*.xlsx
+tickets.json
+_tmp_*
+_teste_*.xlsx
+
+# Saídas da documentação em PDF
+_pdf_build/preview/
+_pdf_build/__pycache__/
+
+# Editores e sistema
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Logs
+*.log
