@@ -21,12 +21,13 @@ Automação que lê um lote de fotos de cupons fiscais de táxi, identifica **n�
 | Tempo total | **43,8 s** (~1,0 s por ticket) |
 | Valores extraídos corretamente | **44 / 44** (100%) |
 | Números do ticket identificados | **42 / 44** (95%)* |
-| Total faturado conferido | **R$ 5.275,95** |
 | Dependência de internet | **nenhuma** |
 
 \* Os 2 casos restantes tinham tinta fisicamente degradada no papel; foram marcados explicitamente na planilha em vez de gerar um número inventado.
 
-> Esses números não são estimativas: são o resultado da execução do lote real de 44 recibos incluído em `img_ticket/`.
+> Esses números não são estimativas: são o resultado da execução de um lote real de 44 recibos em produção.
+>
+> ⚠️ **As imagens não estão neste repositório.** Os recibos pertencem a uma empresa e são protegidos por confidencialidade, por isso foram removidos do código público. A reprodutibilidade é garantida pela documentação do pipeline e pelo próprio código, que aceita qualquer pasta de imagens como entrada.
 
 ---
 
@@ -139,20 +140,22 @@ Quando não dá para ler, o sistema **não chuta**: registra `Ñ IDENTIFICADO`, 
 - **Tesseract 5** com o idioma português (`por.traineddata`) — [download](https://github.com/UB-Mannheim/tesseract/wiki)
 
 ```powershell
-pip install opencv-python numpy pytesseract openpyxl
+pip install -r requirements.txt
 ```
 
 ### Linha de comando
 
+Coloque suas imagens em qualquer pasta (ou use a que já tiver):
+
 ```powershell
-# processa a pasta e gera o Excel na área de trabalho
-python extrair_tickets.py img_ticket
+# processa uma pasta e gera o Excel
+python extrair_tickets.py "C:\caminho\das\imagens"
 
 # com JSON de saída e depuração visual
-python extrair_tickets.py img_ticket --json tickets.json --debug
+python extrair_tickets.py "C:\caminho\das\imagens" --json tickets.json --debug
 
 # escolhendo o número de processos
-python extrair_tickets.py img_ticket --processos 6
+python extrair_tickets.py "C:\caminho\das\imagens" --processos 6
 ```
 
 ### Interface gráfica
@@ -177,16 +180,11 @@ projeto_ticket/
 ├── app_tickets.py          # interface Tkinter + orquestração de processos
 ├── build_exe.ps1           # empacotamento com PyInstaller
 ├── TicketsTaxis.spec       # especificação do executável
-├── img_ticket/             # lote de imagens de entrada (44 recibos)
-├── Documentacao_TicketsTaxis.pdf   # documentação técnica completa (17 páginas)
-└── _pdf_build/             # gerador da documentação em PDF
+├── requirements.txt        # dependências
+└── _pdf_build/             # gerador da documentação técnica em PDF
 ```
 
----
-
-## 📄 Documentação técnica
-
-O arquivo [`Documentacao_TicketsTaxis.pdf`](Documentacao_TicketsTaxis.pdf) (17 páginas) detalha a arquitetura, o pipeline etapa por etapa, as bibliotecas comparadas, os resultados medidos e as limitações conhecidas — incluindo o trecho de código real de cada decisão.
+> As imagens de teste não acompanham o repositório (dados confidenciais da empresa).
 
 ---
 
@@ -196,7 +194,15 @@ O arquivo [`Documentacao_TicketsTaxis.pdf`](Documentacao_TicketsTaxis.pdf) (17 p
 
 ---
 
-## 🔭 Próximos passos
+## � Privacidade
+
+O sistema foi projetado para operar **100% offline**: nenhuma imagem ou dado extraído sai do computador. Isso não é um detalhe de implementação, é um requisito de negócio — recibos de clientes não podem ser enviados para APIs de OCR na nuvem.
+
+Por esse mesmo motivo, as imagens usadas nos testes e nas métricas acima não estão no repositório. O código é genérico e processa qualquer pasta de recibos que receber.
+
+---
+
+## �🔭 Próximos passos
 
 - [ ] Testes automatizados com imagens de referência e comparação de valores
 - [ ] Suporte a PDF (recibos digitalizados em lote)
